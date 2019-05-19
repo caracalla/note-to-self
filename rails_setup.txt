@@ -1,0 +1,95 @@
+try RadRails http://www.aptana.com/products/radrails
+or sublimetext https://github.com/mhartl/rails_tutorial_sublime_text
+learn git http://www.git-scm.com/book/en/Getting-Started-Installing-Git
+
+install RVM
+$ curl -sSL https://get.rvm.io | bash -s stable
+
+update RVM
+$ rvm get stable
+
+install ruby
+$ rvm requirements #gets requirements
+$ rvm install 2.0.0 --with-openssl-dir=$HOME/.rvm/usr #openssl directory may be different
+
+create railsturorial_rails_4_0 gemset
+$ rvm use 2.0.0@railstutorial_rails_4_0 --create --default
+
+update rubygems
+$ gem update --system 2.1.9
+
+install rails
+$ gem install rails --version 4.0.3
+
+install some other crap
+$ sudo apt-get install libxslt-dev libxml2-dev libsqlite3-dev
+
+create new rails app
+$ rails new [application name]
+
+edit Gemfile
+run bundler
+$ bundle install --without production  # parameter is stored
+$ bundle update
+$ bundle install
+
+install node.js
+
+edit config/initializers/secret_token.rb to make it random
+
+install git
+$ apt-get install libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
+$ apt-get install git
+$ git clone git://git.kernel.org/pub/scm/git/git.git
+$ git config --global user.name "Your Name"
+$ git config --global user.email your.email@example.com
+
+create repository
+$ git init
+
+change .gitignore
+
+add files to repo
+$ git add .
+$ git commit -m "Initialize repository"  # -m adds message
+
+write tests and execute them
+$ bundle exec rspec spec/requests/[module]_spec.rb
+
+deploy to heroku
+$ heroku login
+$ heroku create
+$ git push heroku master
+$ heroku open
+$ heroku rename [new application name]
+
+more heroku: https://devcenter.heroku.com/
+
+
+adding a page:
+add tests to spec/requests/[module]_spec.rb
+add route to config/routes.rb
+add action to app/controllers/[module]_controller.rb
+
+
+Make a git branch
+$ git checkout -b [branch name] #-b creates branch
+$ git branch #see current branch
+$ git status #see branch status
+use git mv and similar commands to maintain git visibility
+$ git commit -am [message] #-a commits all changes
+
+Merge branches
+$ git checkout master
+$ git merge [branch name]
+
+
+
+
+
+
+
+
+
+
+

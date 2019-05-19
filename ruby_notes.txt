@@ -1,0 +1,352 @@
+IDENTIFIERS:
+contain numbers, letters, and underscores
+may not begin with a number
+constants, class names, and module names begin with capital letter
+constants aren't actually constant, have global scope but can be defined by classes
+
+[identifier] - local variable, visible only to method or block
+$[identifier] - global variable, visible throughout program
+@[identifier] - instance variable, visible only to instance
+@@[identifier] - class variable, visible only to class instances
+[method name]? - method returns boolean
+[method name]! - method is dangerous
+[method name]= - can be used on left side of assignment operator
+[class]::[identifier] - class constant, can be nested
+[class].[identifier] - class method, can be nested
+
+if a method and variable share names, variable will be evaluated
+
+-------------------------------------------------------------------------
+
+LITERALS:
+numbers (integer (fixnum or bignum) or float)
+strings
+characters
+regular expressions
+arrays
+hashes
+ranges
+symbols
+nil, true, false, self (current object), __FILE__ (current ruby file), __LINE__ (line in __FILE__)
+
+-------------------------------------------------------------------------
+
+NUMBERS:
+integers are Fixnum until they exceed 31 bits, then they are Bignum
+
+0b[number] - binary
+0[number] - octal
+0x[number] - hexadecimal
+
+underscores can be inserted within number literals
+integers support bitwise operations, and bits can be queried with indexing
+BigDecimal (library) provides accurate decimal notation but is slower than binary
+
+-------------------------------------------------------------------------
+
+STRINGS:
+single quotes do not process anything (except \' and \\)
+double quotes process everything
+string interpolation: "#{2*2}" ==> "4"
+backtic quotes execute in the terminal, returns the terminal output
+strings are mutable
+string literals are created as new objects every time (careful with loops)
+iterate through each_byte, each_char, and each_line
+
+-------------------------------------------------------------------------
+
+CHARACTERS:
+?[character]
+
+-------------------------------------------------------------------------
+
+ARRAYS:
+| is union operator
+& is intersection operator
+
+-------------------------------------------------------------------------
+
+HASHES:
+numbers = {"one" => 1, ...}
+the_number_one = numbers["one"]
+
+-------------------------------------------------------------------------
+
+RANGES:
+[begin]..[end] is inclusive ([begin] <= x <= [end])
+[begin]...[end] excudes the end value ([begin] <= x < [end])
+
+-------------------------------------------------------------------------
+
+SYMBOLS:
+any identifier or string preceded by ":"
+
+-------------------------------------------------------------------------
+
+TRUE, FALSE, NIL:
+each is a keyword
+each evaluates to an object
+in a boolean, nil and false evaluate to false, anything else is true
+
+-------------------------------------------------------------------------
+
+OBJECTS:
+all values are objects
+objects are manipulated through references
+each object has an object_id (Fixnum) that is constant and unique
+[obj1].equal?([obj2]) determines if references refer to the same object (have same object_id)
+[obj1] == [obj2] determines if references refer to identical objects (implementation varies)
+comparison of object instances is done through the <=> operator.  Can also include Comparable module
+
+-------------------------------------------------------------------------
+
+METHODS:
+[return value] = [object reference].[method]([argument], [argument], ...) {[block code]}
+if no [object reference], method is invoked on self
+[block code] is invoked with the yield keyword in the method
+
+defining a method:
+
+def [method name]([param1], [param2], ...)
+    return [param1] + [param2]
+end
+
+"return" forcibly returns a value or array of values and terminates the function
+methods can have rescue, else and ensure statements
+methods are invoked on objects, and "self" in the method refers to the object upon which the method was invoked
+singleton methods can be defined on single objects: def [object reference].[method name] (can't be done on Numeric or Symbol objects)
+"undef" can be used to undefine statements, such as in a subclass
+
+method names can contain various characters, + and [] are methods, and begin with lowercase letters
+cannot define new punctuation operators, and only certain operators are definable
+names ending with = signify the method is a setter using assignment syntax
+names ending with ? signify the method answers a question, usually returning a boolean
+names ending with ! signify the method alters mutable objects directly, or is otherwise dangerous
+"alias" can define new names for methods: alias [new name] [existing name]
+defining a different method with [existing name] does not change [new name]'s function
+
+methods cannot be overloaded
+
+method parameters can be given default values: def [method name]([param1], [param2] = [default value], ...)
+[default value] can be a literal or an expression
+arguments are assigned to parameters in left to right order
+prefixing only one parameter with * allows it to accept an array of zero or more arguments
+prefixing final parameter with & allows it to accept a block as a proc, invoked with "call"
+block still appears after other arguments, outside of parentheses, in braces
+passing a proc requires no special punctuation, appending & to a Proc object parameter uses it as a block
+
+methods can be turned into objects: [method object] = [object].method(:[method name])
+invoked with "call" like Proc objects
+Method objects can be passed to methods with & prefix
+Method objects are not closures, do not retain bindings aside from "self"
+
+-------------------------------------------------------------------------
+
+OPERATORS:
+method-based operator is invoked as a method of lefthand operand, right hand operand is argument
+unary plus and minus are defined as -@ and +@.  unary plus does nothing
+
+left bit shift (<<) does not discard high bits, right bit shift (>>) discards low bits
+righthand bit shift argument is the number of bits to shift
+<< is also append for Arrays, Strings, IO, etc
+~ - integer bitwise ones complement, ~[number] = -[number] - 1
+& - integer bitwise AND, Array intersection
+| - integer bitwise OR, Array union
+^ - integer bitwise XOR
+
+~= - pattern matching, expects string and regex, returns nil or integer in string where match begins
+!~ - inverse of ~=
+
+boolean operators (&&, ||, !, and, or, not) cannot be redefined
+if && is evaluating arbitrary values, it returns the right operand if both are true, otherwise returns the false operand
+|| can be used to get the first non-nil value in a series of alternatives
+and, or, not are lower precedence
+.. and ... are also boolean flip-flop expressions, which have state based on previous evaluations
+?: - conditional operator [expression] ? [if true] : [if false]
+defined? - unary operator to determine if a variable or method is defined
+rescue, if, unless, while, and until can be used as operators
+
+-------------------------------------------------------------------------
+
+CONDITIONALS AND LOOPS:
+if [expression] then [expression] end, with newline (or semicolon) in place of then if desired
+elsif
+if expressions return the last value of hte last expression executed, so [variable] = [if statement] is legal
+if as modifier: [expression if true] if [expression]
+unless is the opposite of if, executes only if expression is false or nil, has no elsif
+case statements are good for comparing things
+while and until are opposites, optional "do" keyword acts as "then" for if
+for [variable] in [enumerable object] do [body] end
+
+-------------------------------------------------------------------------
+
+ITERATORS:
+[integer].times {[block body]}
+[enumerable].each {|[block parameters]| [block body]}
+block parameters are derived from expressions following yield statement
+iterators don't necessarily have to iterate through anything
+loop is a kernel method that runs a block until a return or break
+
+integer class defines upto(n), downto(n) and times, and the block parameter is the current integer (times goes 0 to n-1, others go [integer] to n)
+float class defines step(n, [step value])
+Array, Hash and Range and other Enumerable objects define each, each_with_index, collect (or map), select, reject, inject
+
+each - acts on each object in the enumerable object
+each_with_index - each, but with the index {|[variable], [index]| ... }
+collect - creates an array of return values from the block
+select - creates an array of return values from the block that are not false or nil
+reject - is opposite of select
+inject (page 133) - IDGI
+
+Creating an iterator (page 133): use the "yield" statement.  For block arguments, follow yield with a list of expressions
+after yield is executed, control is yielded from the iterator to the block, then back to the iterator once the block is executed.
+
+def [method]([arg1], [arg2])
+    [yarg1] = [arg1] + [arg2]
+    [yarg2] = [arg1] * [arg2]
+    [block out] = yield([yarg1], [yarg2])
+end
+
+[method]([arg1], [arg2]) {|[yarg1], [yarg2]| ... }
+
+[arg1] and [arg2] are arguments to [method], [yarg1] and [yarg2] are returned from yield to the block
+the final block statement (or return statement) is returned to [block out]
+
+block_given? and iterator? determine if a block is passed to a method
+
+-------------------------------------------------------------------------
+
+ENUMERATORS:
+to_enum (or enum_for) create an enumerable but immutable proxy of an enumerable object
+"external iterators" as opposed to "internal iterators", which are just plain iterators
+expand this section later I guess
+
+-------------------------------------------------------------------------
+
+BLOCKS:
+blocks are only legal after method invocations
+are delimited by curly braces or do/end, must begin on same line as method invocation
+block parameters are delimited with vertical bars, separated by commas, and are passed by the yield expression
+
+def [method]
+    yield([yarg1], [yarg2])
+end
+
+[method] {|[barg1], [barg2]| ... }
+
+#[barg1] = [yarg1] and [barg2] = [yarg2]
+
+if yield passes an array matching the number of block parameters, the array is expanded into the parameters
+if yield passes more parameters than there are block parameters, the extra are discarded
+block parameters cannot have default values
+
+blocks have return values, which are available from the yield expression.
+return value is final expression evaluation.  DO NOT USE RETURN, it causes the method the block is in (not the yielding method) to return.  use "next" if necessary
+variables created within blocks only exist in blocks
+local method variables are available in blocks in that method
+
+-------------------------------------------------------------------------
+
+CONTROL FLOW STATEMENTS:
+return - exits method and returns a value to invoker
+         can return multiple values as an array
+         if not followed by a value, returns nil
+         return always causes the enclosing method to return, even if in a block
+
+break - exits a loop/iterator
+        in a block, break causes block to return to iterator, and iterator to return to enclosing method, continuing from expression following the block
+        can return a value, or an array of multiple values, or nil by default
+
+next - causes loop/iterator to skip rest of current iteration
+       exits a block immediately, returning control to the iterator
+       in a loop, next cannot return a value
+       in a block, next returns a value or array of values to yield
+       next in blocks can act like return in methods
+
+redo - restarts loop/iterator from beginning of loop/iterator body
+
+throw/catch - can traverse multiple layers of call stack
+              catch takes a symbol argument and a block, executes block and returns when block exits or symbol is thrown
+              throw takes a symbol argument and causes corresponding catch to return
+              catch and throw can be in different methods
+              if no throw, return of catch is final block expression.  if throw, returns nil or its second argument
+
+-------------------------------------------------------------------------
+
+EXCEPTION HANDLING:
+exception objects are instances of the Exception class
+most handled exceptions are subclasses of StandardError
+message method returns details about what went wrong
+backtrace method returns array of strings representing call stack, starting from where exception was raised: "[filename] : [line number] in [method]"
+making new exception class, subclass StandardError
+
+exceptions can be raised by "raise"
+raise can take no arguments, an Exception argument, a string argument (message) (most common way), or an Exception and a string
+if raise has no exception argument, raises RuntimeError
+
+rescue is a clause attached to other statements, most commonly between begin and end
+
+begin
+    [code]
+rescue
+    [exception handling for [code] or methods called in [code]]
+end
+
+$! - global variable referring to exception object being handled
+alternatively: rescue => [exception name] (does not define new scope, [exception name] is visible when rescue ends)
+rescue handles only StandardError and subclasss by default
+specify types in comma separated list after rescue: rescue [exception class], [exception class], ... => [exception name]
+there can be multiple rescue statements per statement
+"rescue Exception" is a catchall
+in a rescue, "retry" reruns code block which rescue is attached to
+
+an else clause can come after a rescue, to execute if no rescue clauses executed, in which no exceptions are handled
+break, return, next, etc can also prevent else from executing
+
+"ensure" comes after all rescue and else clauses, and always runs
+ensure code runs before exception propagation, and can halt it by returning a value
+ensure code runs before method return, assuming a return statement is between "begin" and "ensure"
+ensure returns override other returns in the begin statement
+
+rescue, else and ensure can be used in method, class and module definitions as well as begin statements
+
+rescue can be used as a statement modifier: y = factorial(x) rescue 0
+cannot be followed by exception class names or a variable name
+
+-------------------------------------------------------------------------
+
+BEGIN AND END STATEMENTS:
+BEGIN executes before everything else, in the order of BEGIN statements found by interpreter
+END executes after everything else, in reverse order of END statements found by interpreter
+code must be in curly braces after keyword
+BEGIN code is only executed once, and has completely local scope (not affected by being in conditionals, no external variables available)
+END code is affected by conditionals (but not loops) and external scope
+
+-------------------------------------------------------------------------
+
+FIBERS:
+page 167
+
+-------------------------------------------------------------------------
+
+PROCS AND LAMBDAS:
+procs and lambdas are both Proc objects
+def [method name](&[arg]); return [arg]; end - will return a proc object (not a lambda) from the block sent to the invocation
+[proc name] = Proc.new { ... } - creates a proc (not a lambda)
+[proc name] = proc { ... } - same
+
+lambda is an anonymous method, in that it is strict about argument count and can use "return" statements within itself
+[lambda name] = lambda { |[arg]| ... } - creates a lambda
+[lambda name] = -> ([arg]) { ... } - allows for arguments to be declared with default values
+
+Proc objects are invoked with "call", takes arguments corresponding to block parameters and returns block output
+lambda? determines if a Proc object is a proc or lambda
+"return" in a lambda returns from within the lambda, not from the method it is in
+"break" doesn't really work for Proc objects
+proc uses "yield" semantics - arrays unpacked, extra arguments discarded, missing arguments replaced with nil
+lambda uses invocation semantics - strict requirements for argument/parameter agreement
+Proc objects retain variables (not just the value) from the scope they are defined in, and any alterations remain with the variable (binding)
+block arguments are always block local
+bindings can be changed with eval: ("[bound variable] = 3", [Proc object].binding)
+
+-------------------------------------------------------------------------
