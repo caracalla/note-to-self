@@ -1,0 +1,145 @@
+information gathered from:
+http://dcjtech.info/topic/linux-kernel-system-calls/
+
+sockets
+  accept
+  bind
+  connect
+  getpeername
+  getsockname
+  getsockopt
+  listen
+
+files
+  access
+  chmod (fchmod, fchmodat)
+  chown (fchown, fchown_at)
+  close
+  creat
+  dup?
+  faccessat - check permissions for a file using directory fd
+  fallocate - manipulate disk space for a file
+  fcntl - manipulate a fd
+  flistxattr - list extended attributes for file from fd
+  flock - add or remove lock on open file
+  fstat (fstatat, fstatfs) - read status of a file from fd
+  ftruncate - truncate file from fd
+  getxattr, removexattr, setxattr - extended attributes for inode
+  fgetxattr, fremovexattr, fsetxattr - extended file attribute management
+  lgetxattr, lremovexattr, lsetxattr - modity extended attributes for links
+  link - create hard links
+  lseek - change file offset
+  lstat - get info about link
+  msync - syncs changes to a file in memory to disk
+  open
+
+process control
+  clone
+  execve
+  _exit
+  exit_Group - all of a process's threads are closed
+  fork
+  kill
+  pause - pause the calling process until it dies or receives a signal
+
+memory
+  brk
+  getpagesize - get size of a regular page of memory
+  madvise
+  mbind - set NUMA policy
+  migrate_pages - moves pages in bulk
+  mincore - checks needed pages of memory exist, to avoid page faults
+  mlock, mlockall, munlockall - keep portion of address space in RAM
+  mmap, munmap, mremap
+  move_pages - moves pages by page
+  mprotect
+
+cache
+  cacheflush
+
+threads
+  capget
+  capset
+  getcpu - allows thread to be found on a specific CPU and NUMA node
+  gettid - get thread id
+
+time
+  adjtimex - updates the kernel's clock
+  clock_getres - retrieves POSIX clock resolution
+  clock_nanosleep, nanosleep
+  getitimer - get value of interval timer:
+    ITIMER+REAL - decrements in real time
+    ITIMER_VIRTUAL - decrements during execution
+    ITIMER_PROF - decrements while either process or system executes
+  gettimeofday
+
+epoll
+  epoll_create
+  epoll_ctl
+  epoll_wait
+
+io
+  io_cancel
+  io_destroy
+  io_getevents
+  io_setup
+  io_submit
+
+mq
+  mq_notify
+  mq_open
+  mq_send
+  mq_unlink
+
+other
+  acct - process accounting
+  add_key - key management
+  alarm - sends signal at a certain time
+  chdir
+  chroot
+  delete_module - unloads kernel modules
+  event_fd - creates a fd used to notify software about events
+  posix_fadvise - optimize data access
+  finit_module - load elf into kernel space using fd
+  get_kernel_syms - read all exported kernel modules and symbols
+  get_mempolicy - get NUMA memory policy for this process
+  getcwd, getwd, get_current_dir_name
+  getdents - get directory entries
+  getgid, getegid - group and effective group id
+  getpgid - PGID
+  getpid, getppid (parent PID)
+  getpriority
+  getresuid - get RUID, EUID, SUID
+    R - real
+    E - effective
+    S - set
+  getresgid
+  getrlimit - get resource limit for process
+  getrusage - get resources used by process
+  getsid - get session id
+  init_module - load kernel module
+  inotify_add_watch, inotify_init, inotify_rm_watch
+  ioctl - change device parameters
+  ioperm
+  iopl
+  ioprio_get
+  ipc - SysV IPC calls
+  kcmp - compare resources used by PIDs
+  kexec_load - load a kernel to be executed after reboot
+  keyctl - make changes to key management
+  lookup_dcookie - get full path of directory entry
+  mkdir
+  mknod - makes file, device file, or named pipe
+  mount
+  nfsservctl - NFS daemon interface
+  nice
+  uname
+  pciconfig_iobase - get information about IO regions in memory
+  perf_event_open - monitor system performance
+  personality - creates a process's execution domain
+  pipe
+  pivot_root - change root filesystem
+  poll - watched fds for ones that are ready for IO
+  pread - with a given offset, reads a fd
+  pwrite - with a given offset, writes to a fd
+  preadv -
