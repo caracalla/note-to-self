@@ -46,20 +46,17 @@ in VM:
     PermitRootLogin yes
     ```
 * `service sshd restart`
-* ssh root@192.168.56.10
-
-in host machine:
-* copy value of `~/.ssh/id_rsa.pub`
-* `ssh root@[host ip]`
-
-in VM:
+* `ssh root@192.168.56.10`
+    * should prompt for root password
+* copy value of `~/.ssh/id_rsa.pub` from host machine
 * paste value of `id_rsa.pub` into `~/.ssh/authorized_keys` file
-* make a new keypair and add it to github
+* `ssh root@192.168.56.10`
+    * should use ssh key
 
 ## clone dotfiles
 in VM:
+* create a new keypair and add it to github
 * clone dotfiles
 * `./remove_symlinks.sh`
 * `./setup.sh`
 * `cp linux/.tmux.conf ~`
-
