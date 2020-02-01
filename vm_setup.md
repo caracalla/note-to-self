@@ -10,6 +10,7 @@ install ssh-server and standard utilities
 ## install shit
 as root:
 * `apt-get install sudo vim git build-essential curl tmux`
+    * If it asks for a cdrom, `vi /etc/apt/sources.list` and comment out cdrom lines at the top
 * `update-alternatives --config editor`
 * `vim /etc/sudoers`
     * dear past self: what was I supposed to do here?
@@ -56,6 +57,8 @@ in VM:
 ## clone dotfiles
 in VM:
 * create a new keypair and add it to github
+    * `ssh-keygen -t rsa -b 4096 -C "your_email@example.com"``
+    * https://github.com/settings/ssh/new
 * clone dotfiles
 * `./remove_symlinks.sh`
 * `./setup.sh`

@@ -2,21 +2,30 @@ information gathered from:
 http://dcjtech.info/topic/linux-kernel-system-calls/
 
 sockets
-  accept
-  bind
-  connect
-  getpeername
-  getsockname
-  getsockopt
-  listen
+  accept - create socket connection
+  bind - give newly created sockets an address (from client side)
+  connect - create a connection to a socket (from server side)
+  getpeername - get name of connected peer socket
+  getsockname - get address of socket
+  getsockopt - list options for socket
+  listen - listen for connections on a socket
+  recv, recvfrom, recvmsg - receive messages from connected sockets
+  recvmmsg - can receive multiple messages at once
+  send, sendto, sendmsg - like write but accept flags
+  sendmmsg - send multiple messages
+  setsockopt - set socket options
+  shutdown - closes a socket
+  socket - creates socket
+  socketpair - creates a pair of sockets
+  splice - splice socket for either input or output
 
 files
-  access
+  access - check file exists, and its permissions for the calling process/user
   chmod (fchmod, fchmodat)
   chown (fchown, fchown_at)
-  close
-  creat
-  dup?
+  close - release memory and fd, close file
+  creat - create a file
+  dup - duplicate fd
   faccessat - check permissions for a file using directory fd
   fallocate - manipulate disk space for a file
   fcntl - manipulate a fd
@@ -32,34 +41,50 @@ files
   lstat - get info about link
   msync - syncs changes to a file in memory to disk
   open
+  pread - with a given offset, reads a fd
+  pwrite - with a given offset, writes to a fd
+  preadv - read a fd, fill many buffers (pread + readv)
+  pwritev - writev and pwrite
+  read - gets data byte by byte from fd, place in buffer
+  readlink - gets full pathname of file a link points to
+  removexattr - remove file extended attributes
+  rename
+  sendfile - copies data from one fd to another within the kernel
+  setxattr
+  stat - get file information
+  symlink - create a symbolic link
+  sync - write file changes from memory onto disk
 
 process control
-  clone
-  execve
-  _exit
+  clone - like fork, but child uses parent's memory space
+  execve - runs an executable
+  _exit - called by process or thread to close itself
   exit_Group - all of a process's threads are closed
-  fork
-  kill
+  fork - create a process with its own memory space and pid
+  kill - kill process based on pid
   pause - pause the calling process until it dies or receives a signal
 
 memory
-  brk
+  brk - give or take memory from a process
   getpagesize - get size of a regular page of memory
-  madvise
+  madvise - advise the kernel on how the process will use memory
   mbind - set NUMA policy
   migrate_pages - moves pages in bulk
   mincore - checks needed pages of memory exist, to avoid page faults
   mlock, mlockall, munlockall - keep portion of address space in RAM
   mmap, munmap, mremap
   move_pages - moves pages by page
-  mprotect
+  mprotect - change memory permissions for calling process
+  remap_file_pages - creates a new nonlinear mapping (pages not placed in order)
+  set_mempolicy - change calling process's NUMA policy
+  subpage_prot - PowerPC specific
 
 cache
-  cacheflush
+  cacheflush - flush data cache at specified address
 
 threads
-  capget
-  capset
+  capget - get thread capabilities
+  capset - set thread capabilities
   getcpu - allows thread to be found on a specific CPU and NUMA node
   gettid - get thread id
 
@@ -71,30 +96,78 @@ time
     ITIMER+REAL - decrements in real time
     ITIMER_VIRTUAL - decrements during execution
     ITIMER_PROF - decrements while either process or system executes
-  gettimeofday
+  gettimeofday - get current time and timezone
+  settimeofday - set time and timezone
+  stime - get unix epoch in seconds
 
 epoll
-  epoll_create
-  epoll_ctl
-  epoll_wait
+  epoll_create - create a new fd for a new epoll instance
+  epoll_ctl - perform various tasks on epoll fd
+  epoll_wait - wait until event is performed on epoll fd
 
 io
-  io_cancel
-  io_destroy
-  io_getevents
-  io_setup
-  io_submit
+  io_cancel - cancel async io tasks
+  io_destroy - destroy instead of cancel, all associated tasks will be cancelled
+  io_getevents - list events in completion queue
+  io_setup - make async io context
+  io_submit - queue async io blocks
 
 mq
-  mq_notify
-  mq_open
-  mq_send
-  mq_unlink
+  mq_notify - subscribe to specific system messages
+  mq_open - open or create message queue
+  mq_send - send message to mq
+  mq_unlink - delete mq
+
+signals
+  alarm - sends signal at a certain time
+  rt_sigqueueinfo, rt_tgsigqueueinfo - send signal and data to a process
+  sigaction - view and change signals
+  signalfd - creates a fd for the process to accept signals through
+  sigpending - allow calling process to view pending signals
+  sigprocmask - allow calling process to view its masked (blocked) signals
+  sigsuspend - pause a process
+
+scheduling
+  getpriority - get scheduling priority of a process
+  sched_get_priority_max - get max priority number accepted by scheduling policy
+  sched_get_priority_min - get min priority number accepted by scheduling policy
+  sched_getaffinity, sched_setaffinity - get/ process CPU affinity
+  sched_getparam, sched_setparam - get/set process schedule parameters
+  sched_getscheduler, sched_setscheduler - get/set process scheduling policy
+  sched_yield - calling process will be placed at end of processor's task queue
+  setpriority - set scheduling priority of a process
+
+resource usage
+  getrlimit - get resource limit for process
+  getrusage - get resources used by process
+  kcmp - compare resources used by PIDs
+  prlimit - get and set process resource limits (getrlimit + setrlimit)
+  setrlimit - set resource limit for process
+
+IDs
+  getgid, getegid - group and effective group id
+  getpgid - PGID
+  getpid, getppid (parent PID)
+  getresuid - get RUID, EUID, SUID
+    R - real
+    E - effective
+    S - set
+  getresgid - same but for GID
+  getsid - get session id
+  set_tid_address - creates pointer to TID
+  setfsgid - set filesystem group id (FSGID) for accessing network filesystems
+  setfsuid - set filesystem user id
+  setgid - set GID for calling process
+  setgroups - set supplementary group IDs for calling process
+  setpgid - set gid of process
+  setreuid, setregid - set real and effective UID/GIDs
+  setresuid, setresgid - can also set saved UID or GID
+  setsid - GID and SID of calling process are set to PID of calling process
+  setuid
 
 other
   acct - process accounting
   add_key - key management
-  alarm - sends signal at a certain time
   chdir
   chroot
   delete_module - unloads kernel modules
@@ -105,26 +178,13 @@ other
   get_mempolicy - get NUMA memory policy for this process
   getcwd, getwd, get_current_dir_name
   getdents - get directory entries
-  getgid, getegid - group and effective group id
-  getpgid - PGID
-  getpid, getppid (parent PID)
-  getpriority
-  getresuid - get RUID, EUID, SUID
-    R - real
-    E - effective
-    S - set
-  getresgid
-  getrlimit - get resource limit for process
-  getrusage - get resources used by process
-  getsid - get session id
   init_module - load kernel module
   inotify_add_watch, inotify_init, inotify_rm_watch
-  ioctl - change device parameters
-  ioperm
-  iopl
-  ioprio_get
+  ioctl - using a fd for a device-file, change device parameters
+  ioperm - set io permissions of a port
+  iopl - change io privilege level of the executing process
+  ioprio_get - get priority and io scheduling class of one or more threads
   ipc - SysV IPC calls
-  kcmp - compare resources used by PIDs
   kexec_load - load a kernel to be executed after reboot
   keyctl - make changes to key management
   lookup_dcookie - get full path of directory entry
@@ -140,6 +200,23 @@ other
   pipe
   pivot_root - change root filesystem
   poll - watched fds for ones that are ready for IO
-  pread - with a given offset, reads a fd
-  pwrite - with a given offset, writes to a fd
-  preadv -
+  process_vm_readv - gets data from pid, give it to calling process
+  process_vm_writev - send data to remote process
+  pselect - like poll, watch many fds for one to be free for IO operations
+  ptrace - a process (tracer) can control and monitor other process (tracee)
+  query_module - retrieves information about a kernel module
+  quotactl - manage disk quota
+  readahead - place files in the page cache
+  reboot
+  request_key - retrieve key from kernel's key ring
+  restart_syscall - resume syscalls paused by a stop signal
+  rmdir
+  select - monitor multiple fds, so io task can be performed on next available
+  set_thread_area - writes an entry to thread local storage array
+  setdomainname - sets domain name as an array (???), getdomainname
+  sethostname - like setdomainname
+  setns - give thread a namespace
+  setup - deprecated, used to prepare devices and fs and mount root fs
+  statfs - get filesystem stats
+  swapon, swapoff - turn swap area on or off
+  syncfs -
